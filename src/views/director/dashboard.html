@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/director/dashboard.css" />
+    <link rel="stylesheet" href="css/director/editarEliminar.css" />
+    <link rel="stylesheet" href="css/director/modal.css" />
+    <title>Dashboard Director</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>🎓 Director</h2>
+          <p id="userName"></p>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item active" data-page="dashboard">Dashboard</li>
+          <li class="nav-item" data-page="maestros">Maestros</li>
+          <li class="nav-item" data-page="alumnos">Alumnos</li>
+          <li class="nav-item" data-page="carreras">Carreras</li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="user-menu">
+            <span id="userEmail"></span>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+          <!-- Dashboard -->
+          <section id="dashboard" class="page-section active">
+            <div class="cards">
+              <div class="card">
+                <h3>Total Maestros</h3>
+                <div class="number" id="totalMaestros">0</div>
+              </div>
+              <div class="card">
+                <h3>Total Alumnos</h3>
+                <div class="number" id="totalAlumnos">0</div>
+              </div>
+              <div class="card">
+                <h3>Total Carreras</h3>
+                <div class="number" id="totalCarreras">0</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Maestros -->
+          <section id="maestros" class="page-section">
+            <div id="messageM" class="message"></div>
+            <div class="form-container" style="margin-bottom: 30px">
+              <h2 style="margin-bottom: 20px">Crear Nuevo Maestro</h2>
+              <form id="maestroForm">
+                <div class="form-group">
+                  <label>Nombre Completo</label>
+                  <input type="text" name="nombre" required />
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" name="email" required />
+                </div>
+                <div class="form-group">
+                  <label>Contraseña</label>
+                  <input type="password" name="password" required />
+                </div>
+                <div class="form-group">
+                  <label>Carrera</label>
+                  <select
+                    name="carrera_id"
+                    id="carreraMaestroSelect"
+                    required
+                  ></select>
+                </div>
+                <div class="form-group">
+                  <label>Especialidad</label>
+                  <input type="text" name="especialidad" />
+                </div>
+                <div class="form-group">
+                  <label>Título</label>
+                  <input type="text" name="titulo" />
+                </div>
+                <div class="form-group">
+                  <label>Teléfono</label>
+                  <input type="tel" name="telefono" />
+                </div>
+                <button type="submit" class="btn">Crear Maestro</button>
+              </form>
+            </div>
+
+            <h2 style="margin-bottom: 20px">Lista de Maestros</h2>
+            <table id="maestrosTable">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Especialidad</th>
+                  <th>Título</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </section>
+
+          <!-- Alumnos -->
+          <section id="alumnos" class="page-section">
+            <div id="messageA" class="message"></div>
+            <div class="form-container" style="margin-bottom: 30px">
+              <h2 style="margin-bottom: 20px">Crear Nuevo Alumno</h2>
+              <form id="alumnoForm">
+                <div class="form-group">
+                  <label>Nombre Completo</label>
+                  <input type="text" name="nombre" required />
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" name="email" required />
+                </div>
+                <div class="form-group">
+                  <label>Contraseña</label>
+                  <input type="password" name="password" required />
+                </div>
+                <div class="form-group">
+                  <label>Matrícula</label>
+                  <input type="text" name="matricula" required />
+                </div>
+                <div class="form-group">
+                  <label>Carrera</label>
+                  <select
+                    name="carrera_id"
+                    id="crearCarreraAlumnoSelect"
+                    required
+                  ></select>
+                  <!-- id="carreraSelect"  -->
+                </div>
+                <div class="form-group">
+                  <label>Teléfono</label>
+                  <input type="tel" name="telefono" />
+                </div>
+                <button type="submit" class="btn">Crear Alumno</button>
+              </form>
+            </div>
+
+            <h2 style="margin-bottom: 20px">Lista de Alumnos</h2>
+            <table id="alumnosTable">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Matrícula</th>
+                  <th>Email</th>
+                  <th>Carrera</th>
+                  <th>Semestre</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </section>
+
+          <!-- Carreras -->
+          <section id="carreras" class="page-section">
+            <div id="messageC" class="message"></div>
+            <div class="form-container" style="margin-bottom: 30px">
+              <h2 style="margin-bottom: 20px">Crear Nueva Carrera</h2>
+              <form id="carreraForm">
+                <div class="form-group">
+                  <label>Nombre de la Carrera</label>
+                  <input type="text" name="nombre" required />
+                </div>
+                <div class="form-group">
+                  <label>Descripción</label>
+                  <textarea name="descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Duración (semestres)</label>
+                  <input
+                    type="number"
+                    name="duracion_semestres"
+                    min="1"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn">Crear Carrera</button>
+              </form>
+            </div>
+
+            <h2 style="margin-bottom: 20px">Lista de Carreras</h2>
+            <table id="carrerasTable">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Duración</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Vistas modales ------ -->
+    <!-- form modal -->
+    <div id="editModal" class="modal-overlay">
+      <div class="form-container modal-content">
+        <div class="modal-header">
+          <h2 style="margin-bottom: 0">Editar Maestro</h2>
+          <button type="button" class="close-btn" onclick="cerrarModal()">
+            ×
+          </button>
+        </div>
+        <form id="editMaestroForm">
+          <div class="form-group">
+            <label>Nombre Completo</label>
+            <input type="text" name="nombre" required />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label>Contraseña (opcional)</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Dejar en blanco para mantener actual"
+            />
+          </div>
+          <div class="form-group">
+            <label>Carrera</label>
+            <select
+              name="carrera_id"
+              id="editCarreraMaestroSelect"
+              required
+            ></select>
+          </div>
+          <div class="form-group">
+            <label>Especialidad</label>
+            <input type="text" name="especialidad" />
+          </div>
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" name="titulo" />
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" />
+          </div>
+          <button type="submit" class="btn">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- form modal alumno -->
+    <div id="editModalAlumno" class="modal-overlay">
+      <div class="form-container modal-content">
+        <div class="modal-header">
+          <h2 style="margin-bottom: 0">Editar Alumno</h2>
+          <button type="button" class="close-btn" onclick="cerrarModal()">
+            ×
+          </button>
+        </div>
+        <div class="form-container" style="margin-bottom: 30px">
+          <form id="editAlumnoForm">
+            <div class="form-group">
+              <label>Nombre Completo</label>
+              <input type="text" name="nombre" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label>Contraseña (opcional)</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Dejar en blanco para mantener actual"
+              />
+            </div>
+            <div class="form-group">
+              <label>Matrícula</label>
+              <input type="text" name="matricula" required />
+            </div>
+            <div class="form-group">
+              <label>Carrera</label>
+              <select
+                name="carrera_id"
+                id="editCarreraAlumnoSelect"
+                required
+              ></select>
+              <!-- id="carreraSelect" -->
+            </div>
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input type="tel" name="telefono" />
+            </div>
+            <button type="submit" class="btn">Guardar Cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carreras Modal -->
+    <div id="editModalCarrera" class="modal-overlay">
+      <div class="form-container modal-content">
+        <div class="modal-header">
+          <h2 style="margin-bottom: 0">Editar Carrera</h2>
+          <button type="button" class="close-btn" onclick="cerrarModal()">
+            ×
+          </button>
+        </div>
+        <div class="form-container" style="margin-bottom: 30px">
+          <form id="editCarreraForm">
+            <div class="form-group">
+              <label>Nombre de la Carrera</label>
+              <input type="text" name="nombre" required />
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <textarea name="descripcion" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Duración (semestres)</label>
+              <input type="number" name="duracion_semestres" min="1" required />
+            </div>
+            <button type="submit" class="btn">Editar Carrera</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <script src="js/director/director.js"></script> -->
+    <script type="module" src="js/director/modules/director.js"></script>
+  </body>
+</html>

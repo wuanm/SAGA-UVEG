@@ -1,0 +1,58 @@
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    /* preparacion para cuando ponemos flex */
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: aparecer 0.3s ease;
+}
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #e74c3c;
+    cursor: pointer;
+}
+
+/* Animación */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
