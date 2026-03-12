@@ -17,6 +17,7 @@ export async function loadMaestros() {
             </td>
         </tr>`;
         return;
+  
     };
 
         tbody.innerHTML = data.map(m => `
