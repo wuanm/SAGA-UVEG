@@ -4,7 +4,7 @@ import {showMessage,cerrarModal} from "./utils.js";
 
 
   // traer carreras      
-export async function loadCarreras() {
+export async function loadCarreras(){
     try {
         const data = await apiCall('/api/auth/director/carreras');
         const tbody = document.querySelector('#carrerasTable tbody');
@@ -60,35 +60,29 @@ async function eliminarCarrera(id) {
 
         }else {
             showMessage('messageC',result.error || 'Error al eliminar', 'error');
-
         }
         
     } catch (error) {
         console.error('Error al eliminar Carrera:', error);
         showMessage('messageA', 'Error de conexión con el servidor', 'error');
-        
-    }
+    };
     
 };
 
 //editar carrera
 async function editarCarrera(id) {
-    //1.referencias a los elementos del DOM
     const modal = document.getElementById('editModalCarrera'); // ID del modal de Carrera
     const form = document.getElementById('editCarreraForm'); // ID del form dentro del modal
     
     try {
-        //2.obtener la lista actualizada de alumnos
         const carreras = await apiCall('/api/auth/director/carreras');
         
-        //3.buscar el alumno específico por ID
         const carrera = carreras.find(c => c.id === id);
         
         if (!carrera) {
             return alert("No se encontró la Carrera");
         }
       
-        //4.llenar el formulario con los datos del alumno encontrado
         form.nombre.value = carrera.nombre;
         form.descripcion.value = carrera.descripcion || '';
         form.duracion_semestres.value = carrera.duracion_semestres || ''
@@ -96,7 +90,6 @@ async function editarCarrera(id) {
         //Guardamos el ID en el dataset para saber qué ID enviar al servidor al guardar
         form.dataset.idCarrera = id;
 
-        //5.mostrar el modal
         modal.style.display = 'flex';
 
     } catch (error) {
@@ -131,7 +124,6 @@ document.getElementById('editCarreraForm').addEventListener('submit', async (e)=
         }else{
             alert('Error: ' + (result.error || 'No se pudo actualizar'));
         }
-    
     
   } catch (error) {
     console.error('Error al actualizar:', error);

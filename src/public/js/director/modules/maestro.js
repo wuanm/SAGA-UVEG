@@ -4,7 +4,6 @@ import { showMessage } from './utils.js';
 
 // Traer maestros registrados
 export async function loadMaestros() {
-
     try {
         const data = await apiCall('/api/auth/director/maestros');
         const tbody = document.querySelector('#maestrosTable tbody');
@@ -69,9 +68,13 @@ async function eliminarMaestro(id) {
 
 //editar maestro
 async function editarMaestro(id) {
+    try {
     const modal = document.getElementById('editModal');
+
     const maestros = await apiCall('/api/auth/director/maestros');
+
     const maestro = maestros.find(m => m.id === id);
+
     if (!maestro) return alert("No se encontró al maestro");
 
     const form = document.getElementById('editMaestroForm');
@@ -81,37 +84,57 @@ async function editarMaestro(id) {
     form.titulo.value = maestro.titulo || '';
     form.telefono.value = maestro.telefono || '';
     form.carrera_id.value = maestro.carrera_id;
+
     form.dataset.idMaestro = id;
+
     modal.style.display = 'flex';
+
+     } catch (error) {
+        console.error("Error al cargar datos del maestro:", error);
+        alert("Error al conectar con el servidor"); 
+    };
 };
 
 //traer carreras al form maestro
 export async function loadCarrerasMaestroSelect() {
-    const data = await apiCall('/api/auth/director/carreras');
-    const select = document.getElementById('carreraMaestroSelect');
-    const selectEdicion = document.getElementById('editCarreraMaestroSelect');
-    const opciones = '<option value="">Seleccionar carrera...</option>' + 
-        data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-    if(select) select.innerHTML = opciones;
-    if(selectEdicion) selectEdicion.innerHTML = opciones;
+    try {
+        const data = await apiCall('/api/auth/director/carreras');
+
+        const select = document.getElementById('carreraMaestroSelect');
+        const selectEdicion = document.getElementById('editCarreraMaestroSelect');
+
+        const opciones = '<option value="">Seleccionar carrera...</option>' + 
+            data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+
+        if(select) select.innerHTML = opciones;
+        if(selectEdicion) selectEdicion.innerHTML = opciones;
+     } catch (error) {
+        console.error("Error al cargar carreras:", error);
+       
+    }
 };
 
 // obtenemos los datos de la base de datos para el formulario
 document.getElementById('maestroForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target));
+    try {
+        const result = await apiCall('/api/auth/director/maestros', 
+            { 
+            method: 'POST', 
+            body: JSON.stringify(data) 
+        });
 
-    const result = await apiCall('/api/auth/director/maestros', 
-        { 
-        method: 'POST', 
-        body: JSON.stringify(data) 
-    });
+        if (result.success) {
+            showMessage('messageM', 'Maestro creado exitosamente', 'success');
+            e.target.reset();
+            loadMaestros();
+        } else { showMessage('messageM', result.error, 'error'); }
 
-    if (result.success) {
-        showMessage('messageM', 'Maestro creado exitosamente', 'success');
-        e.target.reset();
-        loadMaestros();
-    } else { showMessage('messageM', result.error, 'error'); }
+     } catch (error) {
+        console.error("Error al crear maestro:", error);
+        
+    }
 });
 
 //actualizamos datos 

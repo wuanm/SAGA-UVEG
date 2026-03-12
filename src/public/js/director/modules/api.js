@@ -10,10 +10,10 @@ export const user = storedUser ? JSON.parse(storedUser) : {};
 // eliminar localstorage localStorage.clear()
 // ------------------------------------------------
 
-// Validar acceso
-if (!token || user.rol !== 'director') {
-    window.location.href = '/';
-}
+// // Validar acceso
+// if (!token || user.rol !== 'director') {
+//     window.location.href = '/';
+// }
 
 
 

@@ -24,7 +24,7 @@ export function cerrarModal() {
 //     window.location.href = '/';
 // 
 
-export async function logout() {
+export async function logout(){
     try{
         await apiCall('/api/auth/logout',{method: 'POST'});
         localStorage.clear();
