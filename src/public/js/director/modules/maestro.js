@@ -7,8 +7,7 @@ export async function loadMaestros() {
     try {
         const data = await apiCall('/api/auth/director/maestros');
         const tbody = document.querySelector('#maestrosTable tbody');
-
-
+        
         if (!data || !Array.isArray(data) || data.length === 0) {
         tbody.innerHTML = `     
         <tr>
@@ -16,6 +15,7 @@ export async function loadMaestros() {
                 No hay maestros registrados en este momento.
             </td>
         </tr>`;
+     
         return;
     };
 

@@ -131,8 +131,46 @@ document.getElementById('editCarreraForm').addEventListener('submit', async (e)=
     
 });
 
+ //crear carrera
+document.getElementById('carreraForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    //Obtener todos los datos del formulario
+    const formData = new FormData(e.target);
+    console.log(formData);
+
+
+    //Convertir FormData a objeto JavaScript
+    const data = Object.fromEntries(formData);
+    
+
+
+    try {
+        const result = await apiCall('/api/auth/director/carreras', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+
+        if (result.success) {
+            showMessage('messageC', 'Carrera creada exitosamente', 'success');
+            e.target.reset();
+            loadCarreras();
+        } else {
+            showMessage('messageC', result.error, 'error');
+        }
+        } catch (error) {
+        console.error('Error al crear Carrera:', error);
+        showMessage('messageC', 'Error de conexión con el servidor', 'error');
+    }
+});
+
+
+
 
 
 
 window.eliminarCarrera = eliminarCarrera;
 window.editarCarrera = editarCarrera;
+window.loadCarreras = loadCarreras;
+
+
+
