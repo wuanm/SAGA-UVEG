@@ -11,13 +11,14 @@ document.getElementById('userEmail').textContent = user.email;
 
 // Navegación
 document.querySelectorAll('.nav-item').forEach(item =>{
-    item.addEventListener('click',()=>{
+    item.addEventListener('click',function(){
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
 
-        item.classList.add('active');
-        const page = item.dataset.page;//traemos nuestra variable para abrir las pagina seleccionada
+        this.classList.add('active');
+        const page = this.dataset.page;//traemos nuestra variable para abrir las pagina seleccionada
         document.getElementById(page).classList.add('active');
+        document.getElementById('pageTitle').textContent = this.textContent;
 
         if(page === 'dashboard')loadDashboard();
 
@@ -130,9 +131,8 @@ async function loadCompaneros() {
         const tbody = document.querySelector('#companerosTable tbody');
 
         if(!data || data.length ===0 || !Array.isArray(data)){
-            tbody.innerHTML =`
-            '<tr><td colspan="5" style="text-align: center;">No hay compañeros en esta carrera</td></tr>';
-            `;
+            tbody.innerHTML =
+            '<tr><td colspan="5" style="text-align: center;">No hay compañeros en esta carrera</td></tr>'; 
             return;
         };
 
