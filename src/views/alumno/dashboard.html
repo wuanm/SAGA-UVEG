@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/alumno/alumno.css">
+    <title>Dashboard Alumno</title>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Barra lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Alumno</h2>
+                <p id="userName"></p>   
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="dashboard">Dashboard</li>
+                <li class="nav-item" data-page="carrera">Mi Carrera</li>
+                <li class="nav-item" data-page="materias">Mis Actividades</li>
+                <li class="nav-item" data-page="companeros">Compañeros</li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <!-- Cabecera -->
+            <header class="header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-name">
+                    <span id="userEmail" class="user-mail"></span>
+                    <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </header>
+            
+            <!-- Contenido principal -->
+            <main class="content">
+
+                <!-- Informacion general -->
+                <section id="dashboard" class="page-section active">
+                    <div class="info-card">
+                        <h2>información General</h2>
+                        <div id="dashboardInfo">
+
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Informacion de carrera -->
+                <section id="carrera" class="page-section">
+                    <div class="info-card">
+                        <h2>Informacion de mi Carrera</h2>
+                        <div id="carreraInfo">
+
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mis Materias -->
+                <section id="materias" class="page-section">
+                    <h2 class="h2">Mis Actividedades</h2>
+                    <table id="actividadesTable">
+                        <thead>
+                            <tr>
+                                <th>Actividades</th>
+                                <th>Material Profesor</th>
+                                <th>Mi entrega (link Drive)</th>
+                            </tr>
+                        </thead>
+                        <!-- cuerpo de la tabla dinamico -->
+                        <tbody></tbody>
+                    </table>
+                </section>
+
+
+                <!-- Mis  compañeros -->
+                 <section id="companeros" class="page-section">
+                    <h2  class="h2">Mis Compañeros de Carrera</h2>
+                    <table id="companerosTable">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Matrícula</th>
+                                <th>Email</th>
+                                <th>Semestre</th>
+                            </tr>
+                        </thead>
+                        <!-- cuerpo de la tabla dinamico -->
+                        <tbody></tbody>
+                    </table>
+                 </section>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- /// auxiliar -->
+
+    
+
+
+
+
+
+
+    <!-- /////// -->
+    <script type="module" src="js/alumno/modules/alumno.js"></script>
+</body>
+</html>

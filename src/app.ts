@@ -6,9 +6,34 @@ const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+
+
 app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'views', 'director','dashboard.html'))
+    res.sendFile(path.join(__dirname, 'views', 'maestro','dashboard.html'))
 });
+
+// app.get('/',(req,res)=>{
+//     res.sendFile(path.join(__dirname, 'views', 'director','dashboard.html'))
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
