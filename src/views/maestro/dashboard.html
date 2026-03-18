@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/maestro/maestro.css" />
+    <title>Dashboard Maestro</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>👨‍🏫 Docente</h2>
+          <p id="userName"></p>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item active" data-page="dashboard">Dashboard</li>
+          <li class="nav-item" data-page="carrera">Mi Carrera</li>
+          <li class="nav-item" data-page="alumnos">Mis Alumnos</li>
+          <li class="nav-item" data-page="tareas">Tareas</li>
+        </ul>
+      </aside>
+
+      <div class="main-content">
+        <header class="header">
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="userbtn">
+            <span id="userEmail"></span>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+          </div>
+        </header>
+
+        <main class="content">
+          <!-- Dashboard -->
+          <section id="dashboard" class="page-section active">
+            <div class="info-card">
+              <h2>Resumen</h2>
+              <div id="dashboardInfo">Cargando...</div>
+            </div>
+          </section>
+
+          <!-- Mi Carrera -->
+          <section id="carrera" class="page-section">
+            <div class="info-card">
+              <h2>Información de mi Carrera</h2>
+              <div id="carreraInfo">Cargando...</div>
+            </div>
+          </section>
+
+          <!-- Alumnos -->
+          <section id="alumnos" class="page-section">
+            <h2 style="margin-bottom: 20px">Mis Alumnos</h2>
+            <table id="alumnosTable">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Matrícula</th>
+                  <th>Email</th>
+                  <th>Semestre</th>
+                  <th>Teléfono</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </section>
+
+          <!-- Tareas -->
+          <section id="tareas" class="page-section">
+            <div id="messageT" class="message"></div>
+            <div class="form-container">
+              <h2 style="margin-bottom: 20px">Crear Nueva Tarea</h2>
+              <form id="tareaForm">
+                <div class="form-group">
+                  <label>Título</label>
+                  <input type="text" name="titulo" required />
+                </div>
+                <div class="form-group">
+                  <label>Descripción</label>
+                  <textarea name="descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Link de Google Drive</label>
+                  <input
+                    type="url"
+                    name="link_drive"
+                    placeholder="https://drive.google.com/..."
+                  />
+                </div>
+
+                <button type="submit" class="btn">Crear Tarea</button>
+              </form>
+            </div>
+
+            <h2 style="margin-bottom: 20px">Lista de Tareas</h2>
+            <table id="tareasTable">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Descripción</th>
+                  <th>Link Drive</th>
+                  <th>Creada</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </section>
+
+          <!-- Entregas -->
+          <section id="entregas" class="page-section">
+            <h2 style="margin-bottom: 20px">Entregas</h2>
+            <div id="listaEntregas"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="js/maestro/modules/maestro.js"></script>
+  </body>
+</html>
