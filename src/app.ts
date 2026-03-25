@@ -8,19 +8,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-
-<<<<<<< HEAD
-=======
-app.get('/',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'views', 'index.html'))
-
-});
-
-
 app.get('/alumno',(req,res)=>{
     res.sendFile(path.join(__dirname, 'views', 'alumno','dashboard.html'))
 });
->>>>>>> desarrolloAlumno
 
 app.get('/maestro',(req,res)=>{
     res.sendFile(path.join(__dirname, 'views', 'maestro','dashboard.html'))

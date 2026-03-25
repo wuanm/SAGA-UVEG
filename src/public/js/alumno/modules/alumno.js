@@ -18,6 +18,7 @@ document.querySelectorAll('.nav-item').forEach(item =>{
         item.classList.add('active');
         const page = item.dataset.page;//traemos nuestra variable para abrir las pagina seleccionada
         document.getElementById(page).classList.add('active');
+        document.getElementById('pageTitle').textContent = item.textContent;
 
         if(page === 'dashboard')loadDashboard();
 
@@ -81,7 +82,7 @@ async function loadDashboard() {
         </div>
         <div class="info-row">
             <div class="info-label">Actividades :</div>
-            <div class="info-value">${materias.length ||'N/a'} </div>
+            <div class="info-value">${materias.length ||'N/A'} </div>
           
         </div>
        `;
@@ -131,7 +132,7 @@ async function loadCompaneros() {
 
         if(!data || data.length ===0 || !Array.isArray(data)){
             tbody.innerHTML =`
-            '<tr><td colspan="5" style="text-align: center;">No hay compañeros en esta carrera</td></tr>';
+            <tr><td colspan="5" style="text-align: center;">No hay compañeros en esta carrera</td></tr>
             `;
             return;
         };
