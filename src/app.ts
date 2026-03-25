@@ -9,23 +9,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-// app.get('/login',(req,res)=>{
-//     res.sendFile(path.join(__dirname, 'views', 'login.html'))
-// });
-
-
+app.get('/login',(req,res)=>{
+    res.sendFile(path.join(__dirname, 'views', 'login.html'))
+});
 
 app.get('/alumno',(req,res)=>{
     res.sendFile(path.join(__dirname, 'views', 'alumno','dashboard.html'))
 });
 
-// app.get('/maestro',(req,res)=>{
-//     res.sendFile(path.join(__dirname, 'views', 'maestro','dashboard.html'))
-// });
+app.get('/maestro',(req,res)=>{
+    res.sendFile(path.join(__dirname, 'views', 'maestro','dashboard.html'))
+});
 
-// app.get('/director',(req,res)=>{
-//     res.sendFile(path.join(__dirname, 'views', 'director','dashboard.html'))
-// });
+app.get('/director',(req,res)=>{
+    res.sendFile(path.join(__dirname, 'views', 'director','dashboard.html'))
+});
 
 
 

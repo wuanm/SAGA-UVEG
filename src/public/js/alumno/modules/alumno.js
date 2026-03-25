@@ -82,7 +82,7 @@ async function loadDashboard() {
         </div>
         <div class="info-row">
             <div class="info-label">Actividades :</div>
-            <div class="info-value">${materias.length ||'N/a'} </div>
+            <div class="info-value">${materias.length ||'N/A'} </div>
           
         </div>
        `;
