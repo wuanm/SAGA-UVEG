@@ -1,11 +1,11 @@
- const token = localStorage.getItem('token');
- const user = JSON.parse(localStorage.getItem('user') || '{}');
+//comentada esta seguridad para ver el frontend
+//  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
 
-// if (!token || user.rol !== 'maestro') window.location.href = '/';
+// if (user.rol !== 'maestro') window.location.href = '/';
 
-document.getElementById('userName').textContent = user.nombre;
-document.getElementById('userEmail').textContent = user.email;
+// document.getElementById('userName').textContent = user.nombre;
+// document.getElementById('userEmail').textContent = user.email;
 
 // Navegación
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -34,7 +34,6 @@ async function apiCall(url, options = {}) {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
                 ...options.headers
             }
         });
@@ -189,34 +188,39 @@ document.getElementById('tareaForm').addEventListener('submit', async (e) => {
 
 //obtener tareas enviadas por alumnos
 async function verEntregas(tareaId) {
-    const data = await apiCall(`/api/auth/maestro/tareas/${tareaId}/entregas`);
-    const contenedor = document.querySelector('#listaEntregas');
+    try {
+        const data = await apiCall(`/api/auth/maestro/tareas/${tareaId}/entregas`);
+        const contenedor = document.querySelector('#listaEntregas');
 
-    if (!data || data.length === 0) {
-        contenedor.innerHTML = '<p style="padding: 20px; text-align: center;">Nadie ha entregado todavía.</p>';
-        return;
-    };
+        if (!data || data.length === 0) {
+            contenedor.innerHTML = '<p style="padding: 20px; text-align: center;">Nadie ha entregado todavía.</p>';
+            return;
+        };
 
-    
-    contenedor.innerHTML = data.map(entrega => `
-        <div class="entrega-card" style="padding: clamp(10px, 2vh, 15px); border-bottom: 1px solid #eee; margin-bottom: 10px; background: #fff; border-radius: 8px;">
-            <p>
-                <strong style="font-size: clamp(0.9rem, 1.1vw, 1.1rem); color: #2c3e50;">
-                        ${entrega.alumno_nombre}
-                </strong>
-            </p>
-            <a href="${entrega.link_respuesta_alumno}" target="_blank" class="link-drive" style="color: #27ae60; text-decoration: none; font-weight: bold;">
-                📂 Ver Tarea 
-            </a>
-            <br>
-            <small style="font-size: clamp(0.7rem, 0.8vw, 0.85rem); color: #888;">
-                Enviado: ${new Date(entrega.fecha_envio).toLocaleString()}
-            </small>
-        </div>
-    `).join('');
-    
-    // Desplazar automáticamente a la sección 
-    document.getElementById('entregas').scrollIntoView({ behavior: 'smooth' });
+        
+        contenedor.innerHTML = data.map(entrega => `
+            <div class="entrega-card" style="padding: clamp(10px, 2vh, 15px); border-bottom: 1px solid #eee; margin-bottom: 10px; background: #fff; border-radius: 8px;">
+                <p>
+                    <strong style="font-size: clamp(0.9rem, 1.1vw, 1.1rem); color: #2c3e50;">
+                            ${entrega.alumno_nombre}
+                    </strong>
+                </p>
+                <a href="${entrega.link_respuesta_alumno}" target="_blank" class="link-drive" style="color: #27ae60; text-decoration: none; font-weight: bold;">
+                    📂 Ver Tarea 
+                </a>
+                <br>
+                <small style="font-size: clamp(0.7rem, 0.8vw, 0.85rem); color: #888;">
+                    Enviado: ${new Date(entrega.fecha_envio).toLocaleString()}
+                </small>
+            </div>
+        `).join('');
+        
+        // Desplazar automáticamente a la sección 
+        document.getElementById('entregas').scrollIntoView({ behavior: 'smooth' });
+
+        } catch (error) {
+            console.error('Error al obtener entregas:', error);
+    }
 };
 
 //funcion para cambiar de pantalla a  ver entregas

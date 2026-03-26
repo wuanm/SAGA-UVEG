@@ -1,12 +1,12 @@
-import { apiCall, token, user } from './api.js';
+import { apiCall} from './api.js';
 import { loadMaestros, loadCarrerasMaestroSelect } from './maestro.js';
 import { loadAlumnos,loadCarrerasAlumnoSelect} from './alumno.js';
 import { loadCarreras } from './carreras.js';
 
 
 
-document.getElementById('userName').textContent = user.nombre;
-document.getElementById('userEmail').textContent = user.email;
+// document.getElementById('userName').textContent = user.nombre;
+// document.getElementById('userEmail').textContent = user.email;
 
 
 // Cargar estadísticas
