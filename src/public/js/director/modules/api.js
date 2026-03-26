@@ -1,19 +1,8 @@
-// export const token = localStorage.getItem('token');
-// export const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-
 // Codigo auxiliar-----------------
-export const token = localStorage.getItem('token');
-const storedUser = localStorage.getItem('user');
-export const user = storedUser ? JSON.parse(storedUser) : {};
+// const storedUser = localStorage.getItem('user');
+// export const user = storedUser ? JSON.parse(storedUser) : {};
+// export  const user = localStorage.getItem('user');
 
-// eliminar localstorage localStorage.clear()
-// ------------------------------------------------
-
-// // Validar acceso
-// if (!token || user.rol !== 'director') {
-//     window.location.href = '/';
-// }
 
 
 
@@ -25,7 +14,6 @@ export async function apiCall(url, options = {}) {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
                 ...options.headers
             }
         });

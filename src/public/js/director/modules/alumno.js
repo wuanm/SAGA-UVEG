@@ -3,54 +3,67 @@ import {showMessage} from "./utils.js";
 
 //Función traer alumnos
 export  async function loadAlumnos() {
-    const data = await apiCall('/api/auth/director/alumnos');
+    try {
+        
+    
+        const data = await apiCall('/api/auth/director/alumnos');
 
-    const tbody = document.querySelector('#alumnosTable tbody');
+        const tbody = document.querySelector('#alumnosTable tbody');
 
-     if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `     
-        <tr>
-            <td colspan="5" style="text-align: center; padding: 20px;">
-                No hay alumnos registrados en este momento.
-            </td>
-        </tr>`;
-        return;
-    };
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            tbody.innerHTML = `     
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">
+                    No hay alumnos registrados en este momento.
+                </td>
+            </tr>`;
+            return;
+        };
 
-    tbody.innerHTML = data.map( a =>`
-        <tr>
-            <td>${a.nombre}</td>
-            <td>${a.matricula}</td>
-            <td>${a.email}</td>
-            <td>${a.carrera}</td>
-            <td>${a.semestre_actual}</td>
-            <td>
-                <div class="actions-container">
-                    <button class="btn-edit" onclick="editarAlumno(${a.id})" title="Editar">
-                        <i>✎</i>
-                    </button>
-                    <button class="btn-delete" onclick="eliminarAlumno(${a.id})" title="Eliminar">
-                        <i>🗑</i>
-                    </button>
-                </div>
-            </td>
-        </tr>  
-    `).join('');
+        tbody.innerHTML = data.map( a =>`
+            <tr>
+                <td>${a.nombre}</td>
+                <td>${a.matricula}</td>
+                <td>${a.email}</td>
+                <td>${a.carrera}</td>
+                <td>${a.semestre_actual}</td>
+                <td>
+                    <div class="actions-container">
+                        <button class="btn-edit" onclick="editarAlumno(${a.id})" title="Editar">
+                            <i>✎</i>
+                        </button>
+                        <button class="btn-delete" onclick="eliminarAlumno(${a.id})" title="Eliminar">
+                            <i>🗑</i>
+                        </button>
+                    </div>
+                </td>
+            </tr>  
+        `).join('');
+
+    } catch (error) {
+        console.error('Error al cargar alumnos:', error);
+        
+    }
     
 };
 
 //traer carreras al form alumno
 export async function loadCarrerasAlumnoSelect() {
-    const data = await apiCall('/api/auth/director/carreras');
+    try {
+        const data = await apiCall('/api/auth/director/carreras');
 
-    const select = document.getElementById('editCarreraAlumnoSelect');
-    const select2 = document.getElementById('crearCarreraAlumnoSelect');
-    
-    select.innerHTML ='<option value="">Seleccionar...</option>' + 
-        data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-    
-    select2.innerHTML ='<option value="">Seleccionar...</option>' + 
-        data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+        const select = document.getElementById('editCarreraAlumnoSelect');
+        const select2 = document.getElementById('crearCarreraAlumnoSelect');
+        
+        select.innerHTML ='<option value="">Seleccionar...</option>' + 
+            data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+        
+        select2.innerHTML ='<option value="">Seleccionar...</option>' + 
+            data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+
+      } catch (error) {
+        console.error('Error al cargar carreras:', error);
+    }
     
 };
 
