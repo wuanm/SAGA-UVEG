@@ -6,7 +6,7 @@ import { loadCarreras } from './carreras.js';
 
 
 // document.getElementById('userName').textContent = user.nombre;
-// document.getElementById('userEmail').textContent = user.email;
+//  document.getElementById('userEmail').textContent = user.email;
 
 
 // Cargar estadísticas

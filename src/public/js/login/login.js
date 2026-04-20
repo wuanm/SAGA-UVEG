@@ -39,6 +39,4 @@ document.getElementById('loginForm').addEventListener('submit', async (e)=>{
         errorDiv.style.display="block"; 
     }
 
-   
-
 });
