@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import  * as authController from '../controllers/authController'
 import * as directorController from '../controllers/directorController';
-
+import * as maestroController from '../controllers/maestroController';
 import { authPlugins } from 'mysql2';
 
 
@@ -37,6 +37,14 @@ router.get('/auth/director/alumnos', directorController.obtenerAlumnos);
 router.delete('/auth/director/alumnos/:id', directorController.eliminarAlumno);
 router.put('/auth/director/alumnos/:id', directorController.actualizarAlumno);
 
+
+//------------------------RUTAS DE DOCENTE----------------------
+router.get('/auth/maestro/carrera',maestroController.obtenerMiCarrera);
+router.get('/auth/maestro/alumnos',maestroController.obtenerMisAlumnos);
+router.post(
+'/auth/maestro/tareas',maestroController.crearTarea);
+router.get('/auth/maestro/tareas',maestroController.obtenerMisTareas);
+router.get('/auth/maestro/tareas/:tareaId/entregas',maestroController.obtenerEntregasPorTarea);
 
 
 

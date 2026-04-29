@@ -1,11 +1,11 @@
 //comentada esta seguridad para ver el frontend
-//  const user = JSON.parse(localStorage.getItem('user') || '{}');
+const user = JSON.parse(localStorage.getItem('user') || '{}');
 
 
-// if (user.rol !== 'maestro') window.location.href = '/';
+ if (user.rol !== 'maestro') window.location.href = '/';
 
-// document.getElementById('userName').textContent = user.nombre;
-// document.getElementById('userEmail').textContent = user.email;
+document.getElementById('userName').textContent = user.nombre;
+document.getElementById('userEmail').textContent = user.email;
 
 // Navegación
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -26,11 +26,23 @@ document.querySelectorAll('.nav-item').forEach(item => {
     });
 });
 
-//mensajero
+//  Mensajero
 async function apiCall(url, options = {}) {
     try {
 
-        const response = await fetch(url, {
+        // Extraemos el objeto 'user' del LocalStorage
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        //  Obtenemos el ID que guardamos durante el login
+        const userId = user.id;
+
+        // Decidimos si usar '?' o '&' para no romper la URL original
+        const separador = url.includes('?') ? '&' : '?';
+
+        // Creamos la nueva URL inyectando el userId
+        const urlConId = `${url}${separador}userId=${userId}`;
+
+        const response = await fetch(urlConId, {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
@@ -39,6 +51,8 @@ async function apiCall(url, options = {}) {
         });
 
         const data = await response.json();
+
+
 
         if (!response.ok) {
             console.error('Error en respuesta:', data);
@@ -51,7 +65,8 @@ async function apiCall(url, options = {}) {
     }
 };
 
-//Trear datos principales
+
+// Traear datos principales
 async function loadDashboard() {
     try {
         const carrera = await apiCall('/api/auth/maestro/carrera');
@@ -99,7 +114,7 @@ async function loadCarrera() {
     }
 };
 
-//Traer los alumnos
+// Traer los alumnos
 async function loadAlumnos() {
     try {
         const data = await apiCall('/api/auth/maestro/alumnos');
@@ -128,7 +143,7 @@ async function loadAlumnos() {
     }
 };
 
-//Traer las tareas
+// Traer las tareas
 async function loadTareas() {
     try {
         const data = await apiCall('/api/auth/maestro/tareas');
@@ -186,7 +201,7 @@ document.getElementById('tareaForm').addEventListener('submit', async (e) => {
    
 });
 
-//obtener tareas enviadas por alumnos
+// Obtener tareas enviadas por alumnos
 async function verEntregas(tareaId) {
     try {
         const data = await apiCall(`/api/auth/maestro/tareas/${tareaId}/entregas`);
@@ -223,7 +238,7 @@ async function verEntregas(tareaId) {
     }
 };
 
-//funcion para cambiar de pantalla a  ver entregas
+// Funcion para cambiar de pantalla a  ver entregas
 function irAEntregas(id, titulo) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
 

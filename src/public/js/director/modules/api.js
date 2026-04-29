@@ -1,9 +1,11 @@
-// Codigo auxiliar-----------------
-// const storedUser = localStorage.getItem('user');
-// export const user = storedUser ? JSON.parse(storedUser) : {};
-// export  const user = localStorage.getItem('user');
+
+export const user = JSON.parse(localStorage.getItem('user') || '{}');
 
 
+// Validar acceso
+if (user.rol !== 'director') {
+    window.location.href = '/';
+}
 
 
 

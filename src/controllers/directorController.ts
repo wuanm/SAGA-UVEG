@@ -7,7 +7,7 @@ import { connect } from 'http2';
 
 
 
-//crear maestro
+// crear maestro
 export const  crearMaestro = async (req: Request, res: Response) => {
   const connection = await pool.getConnection();
 
