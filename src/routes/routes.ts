@@ -2,6 +2,7 @@ import {Router} from 'express';
 import  * as authController from '../controllers/authController'
 import * as directorController from '../controllers/directorController';
 import * as maestroController from '../controllers/maestroController';
+import * as alumnoController from  '../controllers/alumnoController'
 import { authPlugins } from 'mysql2';
 
 
@@ -12,9 +13,9 @@ const router =Router();
 //-----------------------------RUTAS DE DIRECCION--------------------------
 
 //rutas autenticación
-router.post('/auth/login', authController.login);
-router.post('/auth/logout', authController.logout);
-router.get('/auth/profile',authController.getProfile);
+router.post('/auth/login', authController.login)
+router.post('/auth/logout', authController.logout)
+router.get('/auth/profile',authController.getProfile)
 
 
 //rutas director/maestro
@@ -38,13 +39,35 @@ router.delete('/auth/director/alumnos/:id', directorController.eliminarAlumno);
 router.put('/auth/director/alumnos/:id', directorController.actualizarAlumno);
 
 
+
+
 //------------------------RUTAS DE DOCENTE----------------------
-router.get('/auth/maestro/carrera',maestroController.obtenerMiCarrera);
-router.get('/auth/maestro/alumnos',maestroController.obtenerMisAlumnos);
+router.get(
+    '/auth/maestro/carrera',maestroController.obtenerMiCarrera
+);
+router.get(
+    '/auth/maestro/alumnos',maestroController.obtenerMisAlumnos
+);
 router.post(
-'/auth/maestro/tareas',maestroController.crearTarea);
-router.get('/auth/maestro/tareas',maestroController.obtenerMisTareas);
-router.get('/auth/maestro/tareas/:tareaId/entregas',maestroController.obtenerEntregasPorTarea);
+    '/auth/maestro/tareas',maestroController.crearTarea
+);
+router.get(
+    '/auth/maestro/tareas',maestroController.obtenerMisTareas
+);
+router.get(
+    '/auth/maestro/tareas/:tareaId/entregas',maestroController.obtenerEntregasPorTarea
+);
+
+
+
+
+
+//------------------------RUTAS DE ALUMNO----------------------
+router.get('/auth/alumno/carrera',alumnoController.obtenerMiCarrera);
+router.get('/auth/alumno/companeros',alumnoController.obtenerCompaneros);
+router.get('/auth/alumno/materias',alumnoController.obtenerMisMaterias);
+router.post('/auth/alumno/entregar',alumnoController.subirTarea);
+
 
 
 

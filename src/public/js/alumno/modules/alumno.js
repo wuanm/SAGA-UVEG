@@ -1,23 +1,26 @@
-// const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-const user ={}; //apoyo para saltar el error.
-//  if ( user.rol !== 'alumno') window.location.href = '/';
+const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-// document.getElementById('userName').textContent = user.nombre;
-// document.getElementById('userEmail').textContent = user.email;
+
+
+if (user.rol !== 'alumno') window.location.href = '/';
+
+document.getElementById('userName').textContent = user.nombre;
+document.getElementById('userEmail').textContent = user.email;
 
 
 
 // Navegación
 document.querySelectorAll('.nav-item').forEach(item =>{
-    item.addEventListener('click',function(){
+      item.addEventListener('click',function(){
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
 
-        this.classList.add('active');
-        const page = this.dataset.page;//traemos nuestra variable para abrir las pagina seleccionada
+        item.classList.add('active');
+        const page = item.dataset.page;//traemos nuestra variable para abrir las pagina seleccionada
         document.getElementById(page).classList.add('active');
-        document.getElementById('pageTitle').textContent = this.textContent;
+         document.getElementById('pageTitle').textContent = this.textContent;
+
 
         if(page === 'dashboard')loadDashboard();
 
@@ -30,14 +33,26 @@ document.querySelectorAll('.nav-item').forEach(item =>{
 
     })
 });
-
 //función con fetch empaquetado
 async function apiCall (url,options={}){
     try {
-        const response = await fetch(url,{
+        // 1. Extraemos el objeto 'user' del LocalStorage
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        // 2. Obtenemos el ID que guardamos durante el login
+        const userId = user.id;
+
+        // 3. Decidimos si usar '?' o '&' para no romper la URL original
+        const separador = url.includes('?') ? '&' : '?';
+
+        // 4. Creamos la nueva URL inyectando el userId
+        const urlConId = `${url}${separador}userId=${userId}`;
+
+        const response = await fetch(urlConId, {
             ...options,
             headers:{
                 'Content-type' : 'application/json',
+                // 'Authorization' : `Bearer ${token}`,
                 ...options.headers
             }
         });
@@ -57,66 +72,65 @@ async function apiCall (url,options={}){
 
 //Datos principales
 async function loadDashboard() {
-    try {
-        const carrera = await apiCall('/api/auth/alumno/carrera');
-        const materias = await apiCall('/api/auth/alumno/materias');
+    const carrera = await apiCall('/api/auth/alumno/carrera');
+    const materias = await apiCall('/api/auth/alumno/materias');
 
-        document.getElementById('dashboardInfo').innerHTML= `   
-            <div class="info-row">
-                <div class="info-label">Nombre :</div>
-                <div class="info-value">${user.nombre || 'N/A'}</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Matricula</div>
-                <div class="info-value">${carrera.matricula || 'N/A'}</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Carrera</div>
-                <div class="info-value">${carrera.nombre || 'N/A'}</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Semestre Actual :</div>
-                <div class="info-value">${carrera.semestre_actual || 'N/A'}</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Actividades :</div>
-                <div class="info-value">${materias.length ||'N/A'} </div>
-            
-            </div>
-        `;
-        } catch (error) {
-            console.log(error, 'Error al cargar los datos principales');
-        
-    }
+    document.getElementById('dashboardInfo').innerHTML= `   
+        <div class="info-row">
+            <div class="info-label">Nombre :</div>
+            <div class="info-value">${user.nombre || 'N/A'}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Matricula</div>
+            <div class="info-value">${carrera.matricula || 'N/A'}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Carrera</div>
+            <div class="info-value">${carrera.nombre || 'N/A'}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Semestre Actual :</div>
+            <div class="info-value">${carrera.semestre_actual || 'N/A'}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Actividades :</div>
+            <div class="info-value">${materias.length ||'N/A'} </div>
+          
+        </div>
+       `;
 };
 
 //Obtener carreras
 async function loadCarrera() {
     try{
-        const data = await apiCall('/api/auth/alumno/carrera');
+    const data = await apiCall('/api/auth/alumno/carrera');
 
-        document.getElementById('carreraInfo').innerHTML =`
+    if(!data || data.error){
+        throw new Error('Error al cargar la carrera');
+    };
+
+    document.getElementById('carreraInfo').innerHTML =`
+           <div class="info-row">
+                <div class="info-label">Carrera:</div>
+                <div class="info-value">${data.nombre||'N/A'}</div>
+            </div>
             <div class="info-row">
-                    <div class="info-label">Carrera:</div>
-                    <div class="info-value">${data.nombre || 'N/A'}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Descripción:</div>
-                    <div class="info-value">${data.descripcion || 'N/A'}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Duración:</div>
-                    <div class="info-value">${data.duracion_semestres || 'N/A'}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Semestre Actual:</div>
-                    <div class="info-value">${data.semestre_actual || 'N/A'}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Matrícula:</div>
-                    <div class="info-value">${data.matricula || 'N/A'}</div>
-                </div>
-        `;  
+                <div class="info-label">Descripción:</div>
+                <div class="info-value">${data.descripcion || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Duración:</div>
+                <div class="info-value">${data.duracion_semestres || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Semestre Actual:</div>
+                <div class="info-value">${data.semestre_actual || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Matrícula:</div>
+                <div class="info-value">${data.matricula || 'N/A'}</div>
+            </div>
+    `;  
     }catch (error){
         console.log(error, 'Error al cargar la carrera');
     }
@@ -128,9 +142,10 @@ async function loadCompaneros() {
         const data = await apiCall('/api/auth/alumno/companeros');
         const tbody = document.querySelector('#companerosTable tbody');
 
-        if(!data || data.length ===0 || !Array.isArray(data)){
-            tbody.innerHTML =
-            '<tr><td colspan="5" style="text-align: center;">No hay compañeros en esta carrera</td></tr>'; 
+        if(!data || data.length ===0){
+            tbody.innerHTML =`
+            <tr><td colspan="5" style="text-align: center;">No hay tareas creadas</td></tr>
+            `;
             return;
         };
 
@@ -155,7 +170,7 @@ async function loadMaterias() {
         const data = await apiCall('/api/auth/alumno/materias');
         const tbody = document.querySelector('#actividadesTable tbody');
 
-        if(!data || data.length ===0 || !Array.isArray(data)){
+        if(!data || data.length ===0){
             tbody.innerHTML = 
                 `<tr>
                     <td colspan="5" style="text-align: center;">No hay actividades</td>
@@ -174,7 +189,7 @@ async function loadMaterias() {
                     </td>
                     <td>
                         <div class="entrega-group">
-                            <input type="url"  id="input-${t.id}"    
+                            <input type="url"  id="input-${t.id}"
                                     value="${t.ya_enviado || ''}"
                                     placeholder="Pega tu link aquí"
                                     class="input-fluido">

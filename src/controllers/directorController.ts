@@ -69,7 +69,7 @@ export const obtenerMaestros = async (req: Request, res: Response) => {
   }
 };
 
-//Eliminar maestros
+// Eliminar maestros
 export const eliminarMaestro = async (req: Request, res: Response) => {
   const { id } = req.params; // Este es el ID del usuario
   const connection = await pool.getConnection();
@@ -102,7 +102,7 @@ export const eliminarMaestro = async (req: Request, res: Response) => {
   }
 };
 
-//actualizar maestro
+// actualizar maestro
 export const actualizarMaestro = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nombre, email, password, carrera_id, especialidad, titulo, telefono } = req.body;

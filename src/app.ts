@@ -60,7 +60,7 @@ app.use('/api',routes);
 const startServer = async()=>{
     try{
         await connectDB();//base de datos llamada
-        app.listen(PORT,()=>{
+        app.listen(PORT,'0.0.0.0',()=>{
         console.log(`Servidor corriendo en http://localhost:${PORT}`);  
         });
     }catch(error){
