@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-//import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import {pool} from '../config/database';
 import { Usuario } from '../types';
 
 //api con metodos de login
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body as Usuario;
+    
+  
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
@@ -29,15 +31,34 @@ export const login = async (req: Request, res: Response) => {
     const usuario = usuarios[0];
 
 
+// // Limpiar hash pora evitar algo anormal
+//     const hashLimpio = usuario.password.replace(/'/g, '').trim();
+
+//     const passwordMatch = await bcrypt.compare(password, hashLimpio);
     const passwordMatch = await bcrypt.compare(password, usuario.password);
+    
   
 
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
+ //brazalete de identificación
+    const token = jwt.sign(
+      { id: usuario.id, email: usuario.email, rol: usuario.rol },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '8h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true, //javascriptt no puede leer la cookie
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 8 * 60 * 60 * 1000
+    });
+
     res.json({
       success: true,
+      token,
       usuario: {
         id: usuario.id,
         nombre: usuario.nombre,
@@ -63,7 +84,7 @@ export const logout = (req: Request, res: Response) => {
 //ver los perfiles
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id;
+    const userId = (req as any).user?.id;
 
  
     const [rows] = await pool.query(   

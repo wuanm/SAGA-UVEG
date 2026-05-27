@@ -1,4 +1,3 @@
-
 import { apiCall } from './api.js';
 import { showMessage } from './utils.js';
 
@@ -7,18 +6,18 @@ export async function loadMaestros() {
     try {
         const data = await apiCall('/api/auth/director/maestros');
         const tbody = document.querySelector('#maestrosTable tbody');
-        
+
         if (!data || !Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `     
-        <tr>
-            <td colspan="5" style="text-align: center; padding: 20px;">
-                No hay maestros registrados en este momento.
-            </td>
-        </tr>`;
-     
-        return;
-  
-    };
+            tbody.innerHTML = `     
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">
+                    No hay maestros registrados en este momento.
+                </td>
+            </tr>`;
+        
+            return;
+    
+        };
 
         tbody.innerHTML = data.map(m => `
             <tr>
@@ -39,9 +38,8 @@ export async function loadMaestros() {
                 </td>
             </tr>
         `).join('');
-        } catch (error) {
+     } catch (error) {
             console.error('Error al cargar maestros:', error);
-            
     }
 };
 
@@ -70,25 +68,25 @@ async function eliminarMaestro(id) {
 //editar maestro
 async function editarMaestro(id) {
     try {
-    const modal = document.getElementById('editModal');
+        const modal = document.getElementById('editModal');
 
-    const maestros = await apiCall('/api/auth/director/maestros');
+        const maestros = await apiCall('/api/auth/director/maestros');
 
-    const maestro = maestros.find(m => m.id === id);
+        const maestro = maestros.find(m => m.id === id);
 
-    if (!maestro) return alert("No se encontró al maestro");
+        if (!maestro) return alert("No se encontró al maestro");
 
-    const form = document.getElementById('editMaestroForm');
-    form.nombre.value = maestro.nombre;
-    form.email.value = maestro.email;
-    form.especialidad.value = maestro.especialidad || '';
-    form.titulo.value = maestro.titulo || '';
-    form.telefono.value = maestro.telefono || '';
-    form.carrera_id.value = maestro.carrera_id;
+        const form = document.getElementById('editMaestroForm');
+        form.nombre.value = maestro.nombre;
+        form.email.value = maestro.email;
+        form.especialidad.value = maestro.especialidad || '';
+        form.titulo.value = maestro.titulo || '';
+        form.telefono.value = maestro.telefono || '';
+        form.carrera_id.value = maestro.carrera_id;
 
-    form.dataset.idMaestro = id;
+        form.dataset.idMaestro = id;
 
-    modal.style.display = 'flex';
+        modal.style.display = 'flex';
 
      } catch (error) {
         console.error("Error al cargar datos del maestro:", error);
@@ -111,8 +109,7 @@ export async function loadCarrerasMaestroSelect() {
         if(selectEdicion) selectEdicion.innerHTML = opciones;
      } catch (error) {
         console.error("Error al cargar carreras:", error);
-       
-    }
+       }
 };
 
 // obtenemos los datos de la base de datos para el formulario
@@ -124,18 +121,21 @@ document.getElementById('maestroForm').addEventListener('submit', async (e) => {
             { 
             method: 'POST', 
             body: JSON.stringify(data) 
-        });
+                });
 
         if (result.success) {
             showMessage('messageM', 'Maestro creado exitosamente', 'success');
             e.target.reset();
             loadMaestros();
-        } else { showMessage('messageM', result.error, 'error'); }
+        } else {
+             showMessage('messageM', result.error, 'error'); 
+             e.target.reset();
+            }
 
      } catch (error) {
         console.error("Error al crear maestro:", error);
         
-    }
+        }
 });
 
 //actualizamos datos 

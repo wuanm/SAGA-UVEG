@@ -5,7 +5,8 @@ import { RowDataPacket } from "mysql2";
 
 export const obtenerMiCarrera = async (req: Request, res: Response) => { 
   try {
-    const userId = req.query.userId;
+    const userId = (req as any).user?.id;
+
     const [rows] = await pool.query<RowDataPacket[]>(`
       SELECT 
         c.id,
@@ -33,7 +34,7 @@ export const obtenerMiCarrera = async (req: Request, res: Response) => {
 
 export const obtenerCompaneros = async (req: Request, res: Response) => {
   try {
-         const userId = req.query.userId;
+    const userId = (req as any).user?.id;
 
     const [rows] = await pool.query<RowDataPacket[]>(`
       SELECT 
@@ -57,50 +58,55 @@ export const obtenerCompaneros = async (req: Request, res: Response) => {
   }
 };
 
-//obtener las actividades de la materia
-export const obtenerMisMaterias = async (req: Request, res: Response) =>{
+
+// obtener las actividades de la materia (Pendientes)
+export const obtenerMisMaterias = async (req: Request, res: Response) => {
   try {
-    const userId = req.query.userId;
+    const userId = req.user?.id; // ID del usuario desde el JWT
 
-    //obtenemos el alumno
-    const [alumno]: any = await pool.query(
-      `SELECT 
-         carrera_id 
-      FROM alumnos 
-      WHERE usuario_id = ?`, 
+    // 1. Obtenemos el ID del alumno y su carrera
+    const [alumnoData]: any = await pool.query(
+      `SELECT id, carrera_id FROM alumnos WHERE usuario_id = ?`, 
       [userId]
-      );
+    );
 
-    const miCarrera= alumno[0]?.carrera_id;
+    if (alumnoData.length === 0) {
+      return res.status(404).json({ error: 'Alumno no encontrado' });
+    }
 
+    const alumnoId = alumnoData[0].id;
+    const miCarrera = alumnoData[0].carrera_id;
 
-    //traemos la tareas 
+    // 2. Traemos las tareas que NO están en la tabla de entregas para este alumno
     const [tareas]: any = await pool.query(`
         SELECT
             t.id,
             t.titulo,
             t.descripcion,
-            t.link_drive ,
+            t.link_drive,
             t.created_at
         FROM tareas t
-        WHERE t.carrera_id =?
+        WHERE t.carrera_id = ? 
+        AND t.id NOT IN (
+            SELECT tarea_id 
+            FROM entregas_tareas 
+            WHERE alumno_id = ?
+        )
         ORDER BY t.created_at DESC
-      `,[miCarrera]
+      `, [miCarrera, alumnoId]
     );
 
     res.json(tareas);
     
-
   } catch (error) {
     console.error('Error al obtener materias:', error);
     res.status(500).json([]);
-    
   }
 };
 
 export const subirTarea = async (req: Request, res: Response) => {
   try {
-    const userId = req.query.userId;
+    const userId = req.user?.id;
 
     const {tarea_id, link_respuesta} = req.body;
 
@@ -126,7 +132,7 @@ export const subirTarea = async (req: Request, res: Response) => {
       `,[alumno_id, tarea_id, link_respuesta, link_respuesta]
     );
 
-    res.json({ success: true, message: 'Tarea enviada exitosamente' }); 
+    res.json({ success: true, message: 'Tarea enviada exitosamente ' }); 
     
   } catch (error) {
     console.error('Error al subir tarea:', error);

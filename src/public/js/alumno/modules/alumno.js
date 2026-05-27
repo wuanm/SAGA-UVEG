@@ -1,9 +1,8 @@
-
+const token = localStorage.getItem('token');
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 
 
-
-if (user.rol !== 'alumno') window.location.href = '/';
+if (!token || user.rol !== 'alumno') window.location.href = '/';
 
 document.getElementById('userName').textContent = user.nombre;
 document.getElementById('userEmail').textContent = user.email;
@@ -33,26 +32,15 @@ document.querySelectorAll('.nav-item').forEach(item =>{
 
     })
 });
+
 //función con fetch empaquetado
 async function apiCall (url,options={}){
     try {
-        // 1. Extraemos el objeto 'user' del LocalStorage
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        
-        // 2. Obtenemos el ID que guardamos durante el login
-        const userId = user.id;
-
-        // 3. Decidimos si usar '?' o '&' para no romper la URL original
-        const separador = url.includes('?') ? '&' : '?';
-
-        // 4. Creamos la nueva URL inyectando el userId
-        const urlConId = `${url}${separador}userId=${userId}`;
-
-        const response = await fetch(urlConId, {
+        const response = await fetch(url,{
             ...options,
             headers:{
                 'Content-type' : 'application/json',
-                // 'Authorization' : `Bearer ${token}`,
+                'Authorization' : `Bearer ${token}`,
                 ...options.headers
             }
         });
@@ -72,33 +60,39 @@ async function apiCall (url,options={}){
 
 //Datos principales
 async function loadDashboard() {
-    const carrera = await apiCall('/api/auth/alumno/carrera');
-    const materias = await apiCall('/api/auth/alumno/materias');
+    try {
+        const carrera = await apiCall('/api/auth/alumno/carrera');
+        const materias = await apiCall('/api/auth/alumno/materias');
 
-    document.getElementById('dashboardInfo').innerHTML= `   
-        <div class="info-row">
-            <div class="info-label">Nombre :</div>
-            <div class="info-value">${user.nombre || 'N/A'}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Matricula</div>
-            <div class="info-value">${carrera.matricula || 'N/A'}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Carrera</div>
-            <div class="info-value">${carrera.nombre || 'N/A'}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Semestre Actual :</div>
-            <div class="info-value">${carrera.semestre_actual || 'N/A'}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Actividades :</div>
-            <div class="info-value">${materias.length ||'N/A'} </div>
-          
-        </div>
-       `;
+        document.getElementById('dashboardInfo').innerHTML= `   
+            <div class="info-row">
+                <div class="info-label">Nombre :</div>
+                <div class="info-value">${user.nombre || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Matricula</div>
+                <div class="info-value">${carrera.matricula || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Carrera</div>
+                <div class="info-value">${carrera.nombre || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Semestre Actual :</div>
+                <div class="info-value">${carrera.semestre_actual || 'N/A'}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Actividades :</div>
+                <div class="info-value">${materias.length ||'N/A'} </div>
+            
+            </div>
+        `;
+        } catch (error) {
+            console.log(error, 'Error al cargar los datos principales');
+        
+    }
 };
+
 
 //Obtener carreras
 async function loadCarrera() {
@@ -112,7 +106,7 @@ async function loadCarrera() {
     document.getElementById('carreraInfo').innerHTML =`
            <div class="info-row">
                 <div class="info-label">Carrera:</div>
-                <div class="info-value">${data.nombre||'N/A'}</div>
+                <div class="info-value">${data.nombre}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Descripción:</div>
@@ -120,15 +114,15 @@ async function loadCarrera() {
             </div>
             <div class="info-row">
                 <div class="info-label">Duración:</div>
-                <div class="info-value">${data.duracion_semestres || 'N/A'}</div>
+                <div class="info-value">${data.duracion_semestres}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Semestre Actual:</div>
-                <div class="info-value">${data.semestre_actual || 'N/A'}</div>
+                <div class="info-value">${data.semestre_actual}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Matrícula:</div>
-                <div class="info-value">${data.matricula || 'N/A'}</div>
+                <div class="info-value">${data.matricula}</div>
             </div>
     `;  
     }catch (error){
@@ -144,7 +138,7 @@ async function loadCompaneros() {
 
         if(!data || data.length ===0){
             tbody.innerHTML =`
-            <tr><td colspan="5" style="text-align: center;">No hay tareas creadas</td></tr>
+            '<tr><td colspan="5" style="text-align: center;">No hay tareas creadas</td></tr>';
             `;
             return;
         };
@@ -188,12 +182,12 @@ async function loadMaterias() {
                         <a href="${t.link_drive }" target="_blank">📂 Abrir Material</a>
                     </td>
                     <td>
-                        <div class="entrega-group">
+                        <div class="entrega-group" >
                             <input type="url"  id="input-${t.id}"
                                     value="${t.ya_enviado || ''}"
                                     placeholder="Pega tu link aquí"
                                     class="input-fluido">
-                            <button onclick="subirTarea(${t.id})" class="btn-accion">
+                            <button type="button" onclick="subirTarea(${t.id},this)" class="btn-accion" style="background: #3498db; font-size: clamp(0.7rem, 0.8vw, 0.85rem);">
                                 ${t.ya_enviado ? 'Actualizar' : 'Enviar'}
                             </button>
                         </div>
@@ -208,7 +202,7 @@ async function loadMaterias() {
 };
 
 //Enviar tarea
-async function subirTarea(id) {
+async function subirTarea(id,btnEvn) {
 
     const linkInput = document.getElementById(`input-${id}`);
 
@@ -217,7 +211,6 @@ async function subirTarea(id) {
         return;
     };
 
-
     const linkValue = linkInput.value.trim();
 
     if(!linkValue){
@@ -225,7 +218,16 @@ async function subirTarea(id) {
         return;
     };
 
+    const textoOriginal =btnEvn.textContent; //se guarda el texto original
+
     try {
+        // --- BLOQUEO AQUÍ ---
+        btnEvn.disabled = true;
+        btnEvn.textContent = 'Enviando...';
+        linkInput.disabled = true;
+   
+
+
         const res = await apiCall(`/api/auth/alumno/entregar`, {
             method: 'POST',
             body: JSON.stringify({ 
@@ -233,23 +235,48 @@ async function subirTarea(id) {
                 link_respuesta: linkValue 
             })
         });
-        
-           if (res.ok) {
+            
+           if (res.success) {
                 alert("¡Tarea enviada con éxito!");
+
+                btnEvn.textContent ='Eviado';
+                btnEvn.style.backgroundColor='#28a745';
+                linkInput.value = linkValue;
             } else {
                 alert("Error: " + (res.error || res.message || "Error al enviar"));
+
+                btnEvn.disabled = false;
+                btnEvn.textContent = textoOriginal;
+                linkInput.disabled = false;
             }
+
 
     } catch (error) {
         console.log(error, 'Error al cargar las actividades');
+
+        btnEvn.disabled = false;
+        btnEvn.textContent = 'Reintentar';
+        linkInput.disabled = false;
         
     }
     
 };
 
-function logout() {
-    localStorage.clear(); 
-    window.location.href = '/';
+
+export async function logout() {
+    try{
+        await apiCall('/api/auth/logout',
+            {method: 'POST'
+            });
+
+        localStorage.clear();
+        window.location.href = '/';
+    }catch(error )
+    {console.error('Error al cerrar sesión:', error);
+         localStorage.clear();
+        window.location.href = '/';
+    }
+
 };
 
 

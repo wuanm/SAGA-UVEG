@@ -1,8 +1,10 @@
-//comentada esta seguridad para ver el frontend
-const user = JSON.parse(localStorage.getItem('user') || '{}');
+ 
+ 
+ const token = localStorage.getItem('token');
+ const user = JSON.parse(localStorage.getItem('user') || '{}');
 
 
- if (user.rol !== 'maestro') window.location.href = '/';
+if (!token || user.rol !== 'maestro') window.location.href = '/';
 
 document.getElementById('userName').textContent = user.nombre;
 document.getElementById('userEmail').textContent = user.email;
@@ -26,26 +28,15 @@ document.querySelectorAll('.nav-item').forEach(item => {
     });
 });
 
-//  Mensajero
+//mensajero
 async function apiCall(url, options = {}) {
     try {
 
-        // Extraemos el objeto 'user' del LocalStorage
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        
-        //  Obtenemos el ID que guardamos durante el login
-        const userId = user.id;
-
-        // Decidimos si usar '?' o '&' para no romper la URL original
-        const separador = url.includes('?') ? '&' : '?';
-
-        // Creamos la nueva URL inyectando el userId
-        const urlConId = `${url}${separador}userId=${userId}`;
-
-        const response = await fetch(urlConId, {
+        const response = await fetch(url, {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
                 ...options.headers
             }
         });
@@ -65,8 +56,7 @@ async function apiCall(url, options = {}) {
     }
 };
 
-
-// Traear datos principales
+//Trear datos principales
 async function loadDashboard() {
     try {
         const carrera = await apiCall('/api/auth/maestro/carrera');
@@ -80,7 +70,7 @@ async function loadDashboard() {
             </div>
             <div class="info-row">
                 <div class="info-label">Total Alumnos:</div>
-                <div class="info-value">${alumnos.length || 'N/A'} </div>
+                <div class="info-value">${alumnos.length}</div>
             </div>
         `;
     } catch (error) {
@@ -113,15 +103,14 @@ async function loadCarrera() {
         document.getElementById('carreraInfo').innerHTML = '<p style="color: red;">Error al cargar carrera</p>';
     }
 };
-
-// Traer los alumnos
+//Traer los alumnos
 async function loadAlumnos() {
     try {
         const data = await apiCall('/api/auth/maestro/alumnos');
 
         const tbody = document.querySelector('#alumnosTable tbody');
 
-        if (data.length === 0 || !data || !Array.isArray(data)) {
+        if (data.length === 0) {
             tbody.innerHTML = `     
             <tr>
                 <td colspan="5" style="text-align: center;">No hay alumnos en esta carrera</td>
@@ -142,15 +131,14 @@ async function loadAlumnos() {
         console.error(' Error en loadAlumnos:', error);
     }
 };
-
-// Traer las tareas
+//Traer las tareas
 async function loadTareas() {
     try {
         const data = await apiCall('/api/auth/maestro/tareas');
 
         const tbody = document.querySelector('#tareasTable tbody');
 
-        if (data.length === 0 || !data || !Array.isArray(data)) {
+        if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay tareas creadas</td></tr>';
             return;
         };
@@ -196,12 +184,13 @@ document.getElementById('tareaForm').addEventListener('submit', async (e) => {
     };
 
        } catch (error) {
-        
+        console.log('Error al crear  tarea:', error);
+        showMessage('messageT', 'Error al crear tarea', 'error');  
     }
    
 });
+//obtener tareas enviadas por alumnos
 
-// Obtener tareas enviadas por alumnos
 async function verEntregas(tareaId) {
     try {
         const data = await apiCall(`/api/auth/maestro/tareas/${tareaId}/entregas`);
@@ -238,7 +227,8 @@ async function verEntregas(tareaId) {
     }
 };
 
-// Funcion para cambiar de pantalla a  ver entregas
+
+//funcion para cambiar de pantalla a  ver entregas
 function irAEntregas(id, titulo) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
 
@@ -260,6 +250,8 @@ function irAEntregas(id, titulo) {
 
     verEntregas(id);
 };
+
+
 //mensages
 function showMessage(id, msg, type) {
     const el = document.getElementById(id);
@@ -268,10 +260,20 @@ function showMessage(id, msg, type) {
     el.style.display = 'block';
     setTimeout(() => el.style.display = 'none', 3000);
 };
+
+
 //salir
-function logout() {
-    localStorage.clear(); //borra todo
-    window.location.href = '/';
+export async function logout() {
+    try{
+        await apiCall('/api/auth/logout',{method: 'POST'});
+        localStorage.clear();
+        window.location.href = '/';
+    }catch(error )
+    {console.error('Error al cerrar sesión:', error);
+         localStorage.clear();
+        window.location.href = '/';
+    }
+
 };
 
 loadDashboard();

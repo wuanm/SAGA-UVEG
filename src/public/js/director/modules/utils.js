@@ -19,12 +19,8 @@ export function cerrarModal() {
     document.getElementById('editModalCarrera').style.display='none';
 }
 
-// export function logout() {
-//     localStorage.clear();
-//     window.location.href = '/';
-// 
 
-export async function logout(){
+export async function logout() {
     try{
         await apiCall('/api/auth/logout',{method: 'POST'});
         localStorage.clear();

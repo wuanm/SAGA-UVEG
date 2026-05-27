@@ -7,7 +7,7 @@ import { connect } from 'http2';
 
 
 
-// crear maestro
+//crear maestro
 export const  crearMaestro = async (req: Request, res: Response) => {
   const connection = await pool.getConnection();
 
@@ -31,7 +31,11 @@ export const  crearMaestro = async (req: Request, res: Response) => {
       );
 
     await connection.commit();
-    res.status(201).json({ success: true, message: 'Maestro creado exitosamente' });
+    res.status(201).json({ 
+      success: true, 
+      message: 'Maestro creado exitosamente' 
+    });
+    
   }catch(error:any){
       await connection.rollback();
       if (error.code === 'ER_DUP_ENTRY') {
@@ -69,7 +73,7 @@ export const obtenerMaestros = async (req: Request, res: Response) => {
   }
 };
 
-// Eliminar maestros
+//Eliminar maestros
 export const eliminarMaestro = async (req: Request, res: Response) => {
   const { id } = req.params; // Este es el ID del usuario
   const connection = await pool.getConnection();
@@ -102,7 +106,7 @@ export const eliminarMaestro = async (req: Request, res: Response) => {
   }
 };
 
-// actualizar maestro
+//actualizar maestro
 export const actualizarMaestro = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nombre, email, password, carrera_id, especialidad, titulo, telefono } = req.body;
@@ -347,7 +351,7 @@ export const eliminarCarrera = async (req: Request, res: Response) => {
   }
 };
 
-//actualizar Alumno
+//actualizar carrera
 export const actualizarCarrera = async (req: Request, res: Response) => {
     const { id } = req.params;
      const {nombre,descripcion, duracion_semestres} = req.body;
@@ -362,12 +366,16 @@ export const actualizarCarrera = async (req: Request, res: Response) => {
         );
 
         await connection.commit();
-        res.json({ success: true, message: 'Actualizado correctamente' });
+        res.status(200).json({ 
+          success: true, 
+          message: 'Actualizado correctamente ' });
 
     } catch (error: any) {
         await connection.rollback();
         console.error(error);
-        res.status(500).json({ error: 'Error al actualizar datos' });
+        res.status(500).json({ 
+          error: 'Error al actualizar datos' 
+        });
     } finally {
         connection.release();
     }

@@ -4,10 +4,7 @@ import {showMessage} from "./utils.js";
 //Función traer alumnos
 export  async function loadAlumnos() {
     try {
-        
-    
         const data = await apiCall('/api/auth/director/alumnos');
-
         const tbody = document.querySelector('#alumnosTable tbody');
 
         if (!data || !Array.isArray(data) || data.length === 0) {
@@ -41,26 +38,23 @@ export  async function loadAlumnos() {
         `).join('');
 
     } catch (error) {
-        console.error('Error al cargar alumnos:', error);
-        
-    }
-    
+        console.error('Error al cargar alumnos:', error);   
+        }
 };
 
 //traer carreras al form alumno
 export async function loadCarrerasAlumnoSelect() {
-    try {
-        const data = await apiCall('/api/auth/director/carreras');
+        try {
+            const data = await apiCall('/api/auth/director/carreras');
 
-        const select = document.getElementById('editCarreraAlumnoSelect');
-        const select2 = document.getElementById('crearCarreraAlumnoSelect');
-        
-        select.innerHTML ='<option value="">Seleccionar...</option>' + 
-            data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-        
-        select2.innerHTML ='<option value="">Seleccionar...</option>' + 
-            data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-
+            const select = document.getElementById('editCarreraAlumnoSelect');
+            const select2 = document.getElementById('crearCarreraAlumnoSelect');
+            
+            select.innerHTML ='<option value="">Seleccionar...</option>' + 
+                data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+            
+            select2.innerHTML ='<option value="">Seleccionar...</option>' + 
+                data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
       } catch (error) {
         console.error('Error al cargar carreras:', error);
     }
@@ -145,17 +139,23 @@ document.getElementById('alumnoForm').addEventListener('submit', async (e)=>{
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
 
-    const result = await apiCall('/api/auth/director/alumnos',{
-        method: 'POST',
-        body: JSON.stringify(data)
-    });
+    try {
+        const result = await apiCall('/api/auth/director/alumnos',{
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
 
-    if(result.success){
-        showMessage('messageA','Alumno creado exitosamente','success');
-        e.target.reset();
-        loadAlumnos();
-    }else{
-        showMessage('messageA',result.error,'error');
+        if(result.success){
+            showMessage('messageA','Alumno creado exitosamente','success');
+            e.target.reset();
+            loadAlumnos();
+        }else{
+            showMessage('messageA',result.error,'error');
+        }
+    } catch (error) {
+        console.error('Error al crear alumno:', error);
+        showMessage('messageA','Error de conexión con el servidor','error');
+        
     }
 });
 

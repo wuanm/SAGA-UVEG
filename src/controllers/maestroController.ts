@@ -6,11 +6,10 @@ import {  Usuario , Maestro, Carrera} from '../types';
 
 
 
-// Obtener información de la carrera del maestro-.
+//Obtener información de la carrera del maestro-.
 export  const obtenerMiCarrera = async (req: Request, res: Response)=>{
     try {
-        
-        const userId = req.query.userId;
+        const userId = (req as any).user?.id;
 
         if(!userId){
             return res.status(401).json({error: 'Usuario no autenticado'});
@@ -45,7 +44,7 @@ export  const obtenerMiCarrera = async (req: Request, res: Response)=>{
 // Obtener alumnos de mi carrera
 export const obtenerMisAlumnos = async (req: Request, res: Response) => {
   try {
-        const userId = req.query.userId;
+    const userId = (req as any).user?.id;
 
     const [rows] = await pool.query<RowDataPacket[]>(`
       SELECT 
@@ -68,10 +67,10 @@ export const obtenerMisAlumnos = async (req: Request, res: Response) => {
   }
 };
 
-// Crear tarea
+//Crear tarea
 export const crearTarea = async (req: Request, res: Response) => {
   try {
-    const userId = req.query.userId;
+    const userId = (req as any).user?.id;
     const { titulo, descripcion, link_drive} = req.body;
 
     // Obtener maestro_id y carrera_id
@@ -96,10 +95,10 @@ export const crearTarea = async (req: Request, res: Response) => {
   }
 };
 
-// Obtener tareas creadas por maestro.
+//obtener tareas creadas por maestro.
 export const obtenerMisTareas = async (req: Request, res: Response) => {
   try {
-      const userId = req.query.userId;
+    const userId = (req as any).user?.id;
 
     const [rows] = await pool.query<RowDataPacket[]>(`
       SELECT 
@@ -121,7 +120,7 @@ export const obtenerMisTareas = async (req: Request, res: Response) => {
   }
 };
 
-//Obtener tareas enviadas por alumnos
+//obtener tareas enviadas por alumnos
 export const obtenerEntregasPorTarea = async (req: Request, res: Response) => {
     try {
         const { tareaId } = req.params;

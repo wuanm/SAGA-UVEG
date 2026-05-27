@@ -1,13 +1,12 @@
-import { apiCall,user} from './api.js';
+import { apiCall, token, user } from './api.js';
 import { loadMaestros, loadCarrerasMaestroSelect } from './maestro.js';
 import { loadAlumnos,loadCarrerasAlumnoSelect} from './alumno.js';
 import { loadCarreras } from './carreras.js';
 
 
 
-
- document.getElementById('userName').textContent = user.nombre;
- document.getElementById('userEmail').textContent = user.email;
+document.getElementById('userName').textContent = user.nombre;
+document.getElementById('userEmail').textContent = user.email;
 
 
 // Cargar estadísticas
@@ -18,11 +17,11 @@ async function loadStats() {
         const alumnos = await apiCall('/api/auth/director/alumnos');
         const carreras = await apiCall('/api/auth/director/carreras');
 
-        document.getElementById('totalMaestros').textContent = maestros.length || '0';
-        document.getElementById('totalAlumnos').textContent = alumnos.length || '0';
-        document.getElementById('totalCarreras').textContent = carreras.length ||'0';
+        document.getElementById('totalMaestros').textContent = maestros.length;
+        document.getElementById('totalAlumnos').textContent = alumnos.length;
+        document.getElementById('totalCarreras').textContent = carreras.length;
     } catch (error) { console.error('Error cargando estadísticas:', error); }
-}
+};
 
 window.loadStats = loadStats;
 

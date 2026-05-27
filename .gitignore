@@ -1,3 +1,10 @@
+# Dependencias
 node_modules/
+
+# Copilación de TS
 dist/
+
+
+
+# Variable de entorno
 .env

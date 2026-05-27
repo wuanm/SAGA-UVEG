@@ -1,14 +1,10 @@
-
+export const token = localStorage.getItem('token');
 export const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-
 // Validar acceso
-if (user.rol !== 'director') {
+if (!token || user.rol !== 'director') {
     window.location.href = '/';
 }
-
-
-
 export async function apiCall(url, options = {}) {
     try {
 
@@ -16,6 +12,7 @@ export async function apiCall(url, options = {}) {
             ...options,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
                 ...options.headers
             }
         });
