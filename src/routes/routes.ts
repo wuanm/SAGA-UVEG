@@ -14,13 +14,13 @@ const router =Router();
 
 //-----------------------------RUTAS DE DIRECCION--------------------------
 
-//rutas autenticación
+// Rutas autenticación
 router.post('/auth/login', authController.login)
 router.post('/auth/logout', authMiddleware, authController.logout)
 router.get('/auth/profile', authMiddleware, authController.getProfile)
 
 
-//rutas director/maestro
+// Rutas director/maestro
 router.post('/auth/director/maestros',
     authMiddleware,
     roleMiddleware('director'),
@@ -46,7 +46,7 @@ router.put('/auth/director/maestros/:id',
 );
 
 
-//ruta director/carrera
+// Ruta director/carrera
 router.post('/auth/director/carreras',
     authMiddleware,
     roleMiddleware('director'),
@@ -72,7 +72,7 @@ router.put('/auth/director/carreras/:id',
 );
 
 
-//ruta director alumno
+// Ruta director alumno
 router.post('/auth/director/alumnos', 
         authMiddleware,
         roleMiddleware('director'),

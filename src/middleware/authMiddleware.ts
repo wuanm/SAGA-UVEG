@@ -41,6 +41,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
 
 //verifica si se tiene permiso para estar en esa area
+
+
 export const roleMiddleware = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {

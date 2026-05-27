@@ -31,10 +31,8 @@ export const login = async (req: Request, res: Response) => {
     const usuario = usuarios[0];
 
 
-// // Limpiar hash pora evitar algo anormal
-//     const hashLimpio = usuario.password.replace(/'/g, '').trim();
 
-//     const passwordMatch = await bcrypt.compare(password, hashLimpio);
+   // Contraseña hasheada
     const passwordMatch = await bcrypt.compare(password, usuario.password);
     
   

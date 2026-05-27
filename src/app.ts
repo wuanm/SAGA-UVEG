@@ -30,13 +30,13 @@ app.use(cookieParser());//permite leer cookis
 app.use(express.static(path.join(__dirname,'public')))
 
 
-//ruta publica
+// Ruta publica
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname, 'views', 'login.html'))
 
 });
 
-//ruta privada
+// Ruta privada
 
 app.get('/director', authMiddleware, roleMiddleware('director'), (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'director', 'dashboard.html'));
@@ -54,12 +54,12 @@ app.get('/alumno' ,authMiddleware, roleMiddleware('alumno'),(req,res)=>{
 
 
 
-//ruta del API
+// Ruta del API
 app.use('/api',routes);
 
 
 
-//iniciamos el servidor
+// Iniciamos el servidor
 const startServer = async()=>{
     try{
         await connectDB();//base de datos llamada
